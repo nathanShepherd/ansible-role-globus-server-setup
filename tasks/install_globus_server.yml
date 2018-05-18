@@ -10,6 +10,6 @@
   command: sudo yum install epel-release-latest-7.noarch.rpm
   command: sudo yum install yum-plugin-priorities
 
-- name: Install Globus Connect Serve
+- name: Install Globus Connect Server
   command: sudo yum install globus-connect-server
 

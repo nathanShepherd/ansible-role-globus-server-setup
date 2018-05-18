@@ -1,0 +1,15 @@
+# Install Globus Connect Server
+
+- name: Request latest version of software via HTTP
+  command: sudo curl -LOs https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
+  command: sudo rpm --import https://downloads.globus.org/toolkit/gt6/stable/repo/rpm/RPM-GPG-KEY-Globus
+  command: sudo yum install globus-connect-server-repo-latest.noarch.rpm
+
+- name: Install EPEL repository and Prerequisite packages
+  command: sudo curl -LOs https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  command: sudo yum install epel-release-latest-7.noarch.rpm
+  command: sudo yum install yum-plugin-priorities
+
+- name: Install Globus Connect Serve
+  command: sudo yum install globus-connect-server
+

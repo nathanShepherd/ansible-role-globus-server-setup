@@ -11,8 +11,8 @@ galaxy_info:
 
   github_branch: https://github.com/nathanShepherd/ansible-role-globus-server-setup
 
-   platforms:
-   - name: CentOS 
+  platforms:
+  - name: CentOS 
      versions:
      - 7
 

@@ -29,6 +29,7 @@
     name: yum-plugin-priorities
     state: latest
 
+# ERROR: No package or distribution found ...
 - name: Install Globus Connect Server
   yum:
     name: globus-connect-server

@@ -41,7 +41,11 @@ Before creating your Globus server endpoint, choose a suitable second part for y
 Name = umich_network_infrastructure
 Public = True
 ```
-After editing config file, run
+#### Update Endpoint permissions
+```
+Uncomment a security protocol in etc/myproxy-server.config
+```
+Finally,
 ```
 sudo globus-connect-server-setup
 ```

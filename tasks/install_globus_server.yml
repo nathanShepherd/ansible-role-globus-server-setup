@@ -9,11 +9,18 @@
   rpm_key:
     key: https://downloads.globus.org/toolkit/gt6/stable/repo/rpm/RPM-GPG-KEY-Globus
 
+- name: HTTP request Globus Connect Server RPM
+  get_url:
+    url: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
+    dest: "{{ playbook_dir }}"
+
 # This RPM is not getting installed properly
 - name: Install Globus Connect RPM
   yum:
-    name: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
-    state: latest
+    name: globus-connect-server-repo-latest.noarch.rpm
+  register: STDOUT
+- debug:
+    var: STDOUT
 
 - name: Request EPEL repository and download into local directory
   get_url:
@@ -23,16 +30,24 @@
 - name: Install EPEL
   yum:
     name: epel-release-latest-7.noarch.rpm
+  register: STDOUT
+- debug:
+    var: STDOUT
 
 - name: Install Prerequisite packages
   yum:
     name: yum-plugin-priorities
     state: latest
+  register: STDOUT
+- debug:
+    var: STDOUT
 
 # ERROR: No package or distribution found ...
 - name: Install Globus Connect Server
   yum:
     name: globus-connect-server
-    state: latest
+  register: STDOUT
+- debug:
+    var: STDOUT
 
 #?

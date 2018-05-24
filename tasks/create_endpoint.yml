@@ -1,6 +1,6 @@
 # Create Globus Endpoint
 
-- name: Configure endpoint name
+#- name: Configure endpoint name
 # Get name from user
 # http://docs.ansible.com/ansible/latest/user_guide/playbooks_prompts.html
 #

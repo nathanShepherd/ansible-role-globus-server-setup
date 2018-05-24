@@ -25,6 +25,9 @@ sudo curl -LOs https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarc
 sudo yum install epel-release-latest-7.noarch.rpm
 sudo yum install yum-plugin-priorities
 ```
+To enable EPEL packages on AWS EC2 Instance
+Modify /etc/yum.repos.d/epel.repo. Under the section marked [epel] , change enabled=0 to enabled=1.
+
 
 #### Install Globus Connect Server
 ```
@@ -38,7 +41,11 @@ Before creating your Globus server endpoint, choose a suitable second part for y
 Name = umich_network_infrastructure
 Public = True
 ```
-After editing config file, run
+#### Update Endpoint permissions
+```
+Uncomment a security protocol in etc/myproxy-server.config
+```
+Finally,
 ```
 sudo globus-connect-server-setup
 ```

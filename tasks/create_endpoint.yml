@@ -7,5 +7,7 @@
 # Edit config file
 # http://docs.ansible.com/ansible/latest/modules/lineinfile_module.html
 #
-- name: Setup server
-  command: globus-connect-server-setup
+#- name: Setup server
+#  command: globus-connect-server-setup
+#  use expect prompts
+#  http://docs.ansible.com/ansible/latest/modules/expect_module.html

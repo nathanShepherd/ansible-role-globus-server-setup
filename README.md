@@ -6,9 +6,7 @@ Globus allows you, as a resource provider, to easily offer reliable, secure, hig
 
 # How to setup a [Globus Connect Server](https://docs.globus.org/globus-connect-server-installation-guide/)
 
-## TODO: [Configure Globus Connect Server](https://docs.globus.org/globus-connect-server-installation-guide/#globus_connect_server_configuration)
-
-## TODO [Open TCP Ports](https://docs.globus.org/globus-connect-server-installation-guide/#test_basic_endpoint_functionality)
+## TODO: [Open TCP Ports](https://docs.globus.org/globus-connect-server-installation-guide/#test_basic_endpoint_functionality)
 
 ## Install Globus Connect Server
 
@@ -40,10 +38,6 @@ Before creating your Globus server endpoint, choose a suitable second part for y
 [Endpoint]
 Name = umich_network_infrastructure
 Public = True
-```
-#### Update Endpoint permissions
-```
-Uncomment a security protocol in etc/myproxy-server.config
 ```
 Finally,
 ```

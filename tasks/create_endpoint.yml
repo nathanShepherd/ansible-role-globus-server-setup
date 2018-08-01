@@ -56,10 +56,10 @@
   when: globus_user_name is not defined or globus_user_password is not defined
 
 # to ensure that we don't hang forever, set up a sleep / pkill subshell before we start the globus-connect-server-setup prcoess
-# TODO: investigate why this still runs even when the file referenced in "creates" is present
 - name: Setup server using globus-connect-server-setup
   shell: "(sleep 45 ; pkill -P $$) & globus-connect-server-setup"
-  creates: "/var/lib/globus-connect-server/gridftp.d/globus-connect-server-credential"
+  args:
+    creates: "/var/lib/globus-connect-server/gridftp.d/globus-connect-server-credential"
   environment:
     GLOBUS_USER: "{{ globus_user_name }}"
     GLOBUS_PASSWORD: "{{ globus_user_password }}"
@@ -67,5 +67,6 @@
   become: yes
 
 - debug:
-    var: STDOUT
+    msg: "Globus Connect server setup output was: {{ STDOUT }}"
+
 

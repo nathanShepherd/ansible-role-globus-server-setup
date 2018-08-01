@@ -1,2 +1,4 @@
 ---
 # handlers file for ansible-setup-globus-endpoint
+- name: update apt
+  apt: update_cache=yes

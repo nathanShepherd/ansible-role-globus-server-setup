@@ -8,46 +8,81 @@
 - name: Add Globus key to local GPG keyring
   rpm_key:
     key: https://downloads.globus.org/toolkit/gt6/stable/repo/rpm/RPM-GPG-KEY-Globus
+  become: yes
+  when: ansible_os_family == "RedHat"
 
-- name: HTTP request Globus Connect Server RPM
+- name: Set RedHat/CentOS package source URL
+  set_fact:
+    globus_package_url: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
+  when: ansible_os_family == 'RedHat'
+
+- name: Set Debian/Ubuntu package source URL
+  set_fact:
+    globus_package_url: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo_latest_all.deb
+  when: ansible_os_family == 'Debian'
+
+- name: HTTP request Globus Connect Server package
   get_url:
-    url: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
-    dest: "{{ playbook_dir }}"
+    url: "{{ globus_package_url }}"
+    dest: "{{ ansible_user_dir }}"
+
+- name: Install Globus Connect Server from .deb
+  apt: deb="{{ ansible_user_dir }}/globus-connect-server-repo_latest_all.deb"
+  notify: update apt
+  become: yes
+  when: ansible_os_family == 'Debian'
 
 # This RPM is not getting installed properly
 - name: Install Globus Connect RPM
   yum:
     name: globus-connect-server-repo-latest.noarch.rpm
   register: STDOUT
+  become: yes
+  when: ansible_os_family == 'RedHat'
+
 - debug:
     var: STDOUT
+  when: ansible_os_family == 'RedHat'
 
 - name: Request EPEL repository and download into local directory
   get_url:
     url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     dest: "{{ playbook_dir }}"
+  become: yes  
+  when: ansible_os_family == 'RedHat'
 
 - name: Install EPEL
   yum:
     name: epel-release-latest-7.noarch.rpm
   register: STDOUT
+  become: yes
+  when: ansible_os_family == 'RedHat'
+
 - debug:
     var: STDOUT
+  when: ansible_os_family == 'RedHat'
 
 - name: Install Prerequisite packages
   yum:
     name: yum-plugin-priorities
     state: latest
   register: STDOUT
+  become: yes
+  when: ansible_os_family == 'RedHat'
+
 - debug:
     var: STDOUT
+  when: ansible_os_family == 'RedHat'
 
 # ERROR: No package or distribution found ...
 - name: Install Globus Connect Server
-  yum:
+  package:
     name: globus-connect-server
+    state: present
   register: STDOUT
-- debug:
-    var: STDOUT
+  become: yes
 
+- debug:
+    msg: STDOUT
+  when: ansible_os_family == 'RedHat'
 #?

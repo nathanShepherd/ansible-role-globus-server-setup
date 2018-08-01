@@ -1,6 +1,18 @@
 ---
 # tasks file for ansible-setup-globus-endpoint
 
+- name: install ntp
+  package: 
+    name: ntp 
+    state: present
+  become: yes
+
+- name: configure ntp service
+  service:
+    name: ntp
+    state: started
+    enabled: yes
+
 - name: Configure TCP ports for public access
   include_tasks: open_TCP_ports.yml
 
@@ -10,6 +22,6 @@
 - name: Create Endpoint
   include_tasks: create_endpoint.yml
 
-- name: Verify globus-gridftp-server Service
+- name: Ensure Globus Connect is started
   include_tasks: verify_service.yml
 

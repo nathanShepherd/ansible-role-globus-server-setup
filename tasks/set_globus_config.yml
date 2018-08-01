@@ -1,0 +1,10 @@
+---
+- name: Set Globus User configuration, section {{ config_section.section }}
+  ini_file:
+    path: /etc/globus-connect-server.conf
+    section: "{{ config_section.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+  loop: "{{ config_section.settings }}"
+  become: yes

@@ -4,26 +4,68 @@
 # Get name from user
 # http://docs.ansible.com/ansible/latest/user_guide/playbooks_prompts.html
 
-- debug:
-    var: "{{ endpoint_name }}"
+# - debug:
+#     var: "{{ endpoint_name }}"
 
 # Edit config file
 # http://docs.ansible.com/ansible/latest/modules/lineinfile_module.html
 
-- lineinfile:
+- name: Set Globus User configuration
+  include_tasks: set_globus_config.yml
+  loop: "{{ globus_config_settings }} "
+  loop_control:
+    loop_var: config_section
+  vars:
+    globus_config_settings:
+      - section: Globus
+        settings:
+          - option: User
+            value: '%(GLOBUS_USER)s'
+          - option: Password
+            value: '%(GLOBUS_PASSWORD)s'
+      - section: Endpoint
+        settings:
+          - option: Name
+            value: '%(SHORT_HOSTNAME)s'
+          - option: Public
+            value: "{{ is_public|default('False') }}"
+      - section: GridFTP
+        settings:
+          - option: Server
+            value: '%(HOSTNAME)s'
+          - option: ServerBehindNAT
+            value: "{{ server_is_behind_nat|default('False') }}"
+      - section: MyProxy
+        settings:
+          - option: Server
+            value: '%(HOSTNAME)s'
+          - option: ServerBehindNAT
+            value: "{{ is_public|default('False') }}"
+    become: yes
+
+- name: Set DataInterface
+  ini_file:
     path: /etc/globus-connect-server.conf
-    regexp: "^Name ="
-    line: 'Name = {{ endpoint_name }}'
+    section: GridFTP
+    option: DataInterface
+    value: '{{ globus_datainterface_address }}'
+    state: present
+  when: server_is_behind_nat|default(False) != False
 
-- lineinfile:
-    path: /etc/globus-connect-server.conf
-    regexp: "^Public ="
-    line: 'Public = {{ is_public }}'
+- fail: msg="globus_user_name and globus_user_password variables are required to setup Globus Connect Server"
+  when: globus_user_name is not defined or globus_user_password is not defined
 
+# to ensure that we don't hang forever, set up a sleep / pkill subshell before we start the globus-connect-server-setup prcoess
+# TODO: investigate why this still runs even when the file referenced in "creates" is present
+- name: Setup server using globus-connect-server-setup
+  shell: "(sleep 45 ; pkill -P $$) & globus-connect-server-setup"
+  creates: "/var/lib/globus-connect-server/gridftp.d/globus-connect-server-credential"
+  environment:
+    GLOBUS_USER: "{{ globus_user_name }}"
+    GLOBUS_PASSWORD: "{{ globus_user_password }}"
+  register: STDOUT
+  become: yes
 
+- debug:
+    var: STDOUT
 
-
-#- name: Setup server
-#  command: globus-connect-server-setup
-#  use expect prompts
-#  http://docs.ansible.com/ansible/latest/modules/expect_module.html
